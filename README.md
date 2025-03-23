@@ -21,3 +21,8 @@ usable settings.
 
 - Targeting mode: given a desired target location (in X and Y), determine one (or more) launch velocity and angle settings to hit the target. This tab does not work,
 the equations seem wrong but I haven't debugged it.
+
+## Copilot
+
+v1: Simplified the app, especially removing the last tab from the Gemini attempt, and
+removed the plot (for now)
