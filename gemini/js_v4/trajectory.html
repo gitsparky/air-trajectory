@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projectile Trajectory Calculator</title>
+    <style>
+        body { font-family: sans-serif; }
+        #canvas { border: 1px solid black; }
+        #tabs { display: flex; }
+        .tab { padding: 10px; border: 1px solid #ccc; cursor: pointer; }
+        .tab.active { background-color: #eee; }
+        .tab-content { display: none; padding: 20px; border: 1px solid #ccc; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <div id="tabs">
+        <div class="tab active" data-tab="prediction">Prediction Mode</div>
+        <div class="tab" data-tab="calibration">Calibration Mode</div>
+        <div class="tab" data-tab="targeting">Targeting Mode</div>
+    </div>
+
+    <div id="prediction" class="tab-content active">
+        <label>Initial Velocity (m/s): <input type="number" id="v0_pred" value="20"></label><br>
+        <label>Launch Angle (degrees): <input type="number" id="theta_pred" value="45"></label><br>
+        <label>Initial Height (m): <input type="number" id="h0_pred" value="0"></label><br>
+        <button onclick="calculatePrediction()">Calculate</button><br>
+        <div id="prediction_results"></div>
+    </div>
+
+    <div id="calibration" class="tab-content">
+        <label>Horizontal Range (m): <input type="number" id="range_cal" value="30"></label><br>
+        <label>Launch Angle (degrees): <input type="number" id="theta_cal" value="45"></label><br>
+        <label>Initial Height (m): <input type="number" id="h0_cal" value="0"></label><br>
+        <button onclick="calculateCalibration()">Calculate</button><br>
+        <div id="calibration_results"></div>
+    </div>
+
+    <div id="targeting" class="tab-content">
+        <label>Target X (m): <input type="number" id="target_x" value="25"></label><br>
+        <label>Target Y (m): <input type="number" id="target_y" value="5"></label><br>
+        <label>Initial Height (m): <input type="number" id="h0_target" value="0"></label><br>
+        <button onclick="calculateTargeting()">Calculate</button><br>
+        <div id="targeting_results"></div>
+    </div>
+
+    <canvas id="canvas" width="600" height="400"></canvas>
+
+    <script src="script2.js"></script>
+</body>
+</html>
