@@ -1,37 +1,50 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
 }
 
 .container {
-    max-width: 600px;
-    margin: auto;
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    height: 90%;
     background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    text-align: center;
+.left-panel {
+    width: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+}
+
+.right-panel {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .tab-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
+    margin-right: 10px;
     padding: 10px 20px;
-    margin: 0 5px;
     cursor: pointer;
-    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
 }
 
 .tab-button:hover {
@@ -40,23 +53,16 @@ h1 {
 
 .tab-content {
     display: none;
+    margin-top: 20px;
+    flex-direction: column;
 }
 
 .tab-content.active {
-    display: block;
+    display: flex;
 }
 
-label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-input {
-    width: 100%;
-    padding: 8px;
+.tab-content label, .tab-content input, .tab-content button {
     margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
 }
 
 button {
@@ -72,6 +78,23 @@ button:hover {
     background-color: #218838;
 }
 
-#predictResults, #calibrateVelocityResults, #calibrateAngleResults {
-    margin-top: 20px;
+canvas {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left-panel, .right-panel {
+        width: 100%;
+        height: 50%;
+    }
+
+    .right-panel {
+        height: 50%;
+    }
 }

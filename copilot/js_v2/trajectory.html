@@ -8,48 +8,53 @@
 </head>
 <body>
     <div class="container">
-        <h1>Projectile Motion Calculator</h1>
-        <label for="launchHeight">Launch Height (m):</label>
-        <input type="number" id="launchHeight" name="launchHeight" step="0.01">
+        <div class="left-panel">
+            <h1>Projectile Motion Calculator v2</h1>
+            <label for="launchHeight">Launch Height (m):</label>
+            <input type="number" id="launchHeight" name="launchHeight" step="0.01">
 
-        <div class="tabs">
-            <button class="tab-button" onclick="showTab('predictTab')">Predict</button>
-            <button class="tab-button" onclick="showTab('calibrateVelocityTab')">Calibrate Velocity</button>
-            <button class="tab-button" onclick="showTab('calibrateAngleTab')">Calibrate Angle</button>
+            <div class="tabs">
+                <button class="tab-button" onclick="showTab('predictTab')">Predict</button>
+                <button class="tab-button" onclick="showTab('calibrateVelocityTab')">Calibrate Velocity</button>
+                <button class="tab-button" onclick="showTab('calibrateAngleTab')">Calibrate Angle</button>
+            </div>
+
+            <div id="predictTab" class="tab-content active">
+                <h2>Predict</h2>
+                <label for="launchVelocity">Launch Velocity (m/s):</label>
+                <input type="number" id="launchVelocity" name="launchVelocity" step="0.01">
+                <label for="launchAngle">Launch Angle (degrees):</label>
+                <input type="number" id="launchAngle" name="launchAngle" step="0.01">
+                <button onclick="predict()">Calculate</button>
+                <div id="predictResults"></div>
+            </div>
+
+            <div id="calibrateVelocityTab" class="tab-content">
+                <h2>Calibrate Velocity</h2>
+                <label for="targetDistance">Target Distance (m):</label>
+                <input type="number" id="targetDistance" name="targetDistance" step="0.01">
+                <label for="targetHeight">Target Height (m):</label>
+                <input type="number" id="targetHeight" name="targetHeight" step="0.01">
+                <label for="calibrateAngle">Launch Angle (degrees):</label>
+                <input type="number" id="calibrateAngle" name="calibrateAngle" step="0.01">
+                <button onclick="calibrateVelocity()">Calculate</button>
+                <div id="calibrateVelocityResults"></div>
+            </div>
+
+            <div id="calibrateAngleTab" class="tab-content">
+                <h2>Calibrate Angle</h2>
+                <label for="calibrateVelocity">Launch Velocity (m/s):</label>
+                <input type="number" id="calibrateVelocity" name="calibrateVelocity" step="0.01">
+                <label for="targetDistanceAngle">Target Distance (m):</label>
+                <input type="number" id="targetDistanceAngle" name="targetDistanceAngle" step="0.01">
+                <label for="targetHeightAngle">Target Height (m):</label>
+                <input type="number" id="targetHeightAngle" name="targetHeightAngle" step="0.01">
+                <button onclick="calibrateAngle()">Calculate</button>
+                <div id="calibrateAngleResults"></div>
+            </div>
         </div>
-
-        <div id="predictTab" class="tab-content active">
-            <h2>Predict</h2>
-            <label for="launchVelocity">Launch Velocity (m/s):</label>
-            <input type="number" id="launchVelocity" name="launchVelocity" step="0.01">
-            <label for="launchAngle">Launch Angle (degrees):</label>
-            <input type="number" id="launchAngle" name="launchAngle" step="0.01">
-            <button onclick="predict()">Calculate</button>
-            <div id="predictResults"></div>
-        </div>
-
-        <div id="calibrateVelocityTab" class="tab-content">
-            <h2>Calibrate Velocity</h2>
-            <label for="targetDistance">Target Distance (m):</label>
-            <input type="number" id="targetDistance" name="targetDistance" step="0.01">
-            <label for="targetHeight">Target Height (m):</label>
-            <input type="number" id="targetHeight" name="targetHeight" step="0.01">
-            <label for="calibrateAngle">Launch Angle (degrees):</label>
-            <input type="number" id="calibrateAngle" name="calibrateAngle" step="0.01">
-            <button onclick="calibrateVelocity()">Calculate</button>
-            <div id="calibrateVelocityResults"></div>
-        </div>
-
-        <div id="calibrateAngleTab" class="tab-content">
-            <h2>Calibrate Angle</h2>
-            <label for="calibrateVelocity">Launch Velocity (m/s):</label>
-            <input type="number" id="calibrateVelocity" name="calibrateVelocity" step="0.01">
-            <label for="targetDistanceAngle">Target Distance (m):</label>
-            <input type="number" id="targetDistanceAngle" name="targetDistanceAngle" step="0.01">
-            <label for="targetHeightAngle">Target Height (m):</label>
-            <input type="number" id="targetHeightAngle" name="targetHeightAngle" step="0.01">
-            <button onclick="calibrateAngle()">Calculate</button>
-            <div id="calibrateAngleResults"></div>
+        <div class="right-panel">
+            <canvas id="trajectoryCanvas"></canvas>
         </div>
     </div>
     <script src="script.js"></script>
