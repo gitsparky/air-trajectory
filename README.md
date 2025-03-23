@@ -25,4 +25,6 @@ the equations seem wrong but I haven't debugged it.
 ## Copilot
 
 v1: Simplified the app, especially removing the last tab from the Gemini attempt, and
-removed the plot (for now)
+removed the plot (for now). App uses only HTML, CSS and Javascript.
+
+v2: Slightly extended version, with more outputs on the tabs, and having one of the tabs open at startup. Also have a 1-pager version of the app.
