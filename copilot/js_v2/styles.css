@@ -35,6 +35,41 @@ body {
 
 .tabs {
     margin-top: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.tab-list {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.tab-item {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    font-weight: bold;
+    color: #007bff;
+    text-align: center;
+}
+
+.tab-item.active {
+    background-color: #ffffff; /* White background for the active tab */
+    border-bottom: 2px solid #ffffff; /* Seamless transition with the content area */
+    color: #0056b3; /* Darker blue text for the active tab */
+    font-weight: bold; /* Bold text for emphasis */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for a raised effect */
+    z-index: 1; /* Ensure the active tab appears above others */
+}
+
+.tab-item:hover {
+    background-color: #e9ecef;
+    color: #0056b3;
 }
 
 .tab-button {
@@ -55,6 +90,11 @@ body {
     display: none;
     margin-top: 20px;
     flex-direction: column;
+    border: 1px solid #ddd; /* Add a border around the tab content */
+    border-radius: 5px; /* Add rounded corners */
+    padding: 15px; /* Add padding inside the content area */
+    background-color: #f9f9f9; /* Light background color for better visibility */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for a raised effect */
 }
 
 .tab-content.active {
@@ -63,6 +103,17 @@ body {
 
 .tab-content label, .tab-content input, .tab-content button {
     margin-bottom: 10px;
+}
+
+.results-box {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for a raised effect */
+    font-size: 14px;
+    color: #333;
 }
 
 button {

@@ -11,11 +11,17 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 function showTab(tabId) {
+    // Get all tab contents and tab items
     const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-        tab.classList.remove('active');
-    });
+    const tabItems = document.querySelectorAll('.tab-item');
+
+    // Remove the active class from all tabs and tab items
+    tabs.forEach(tab => tab.classList.remove('active'));
+    tabItems.forEach(tabItem => tabItem.classList.remove('active'));
+
+    // Add the active class to the clicked tab content and corresponding tab item
     document.getElementById(tabId).classList.add('active');
+    document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
 }
 
 function predict() {
@@ -133,7 +139,7 @@ function drawTrajectory(launchVelocity, launchAngleRad, launchHeight, timeOfFlig
                             label: {
                                 content: `Horizontal Distance: ${horizontalDistance.toFixed(2)} m`,
                                 display: true,
-                                position: 'end',
+                                position: 'start',
                             },
                         },
                         maxHeight: {
