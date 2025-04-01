@@ -40,92 +40,120 @@ function predict() {
 }
 
 function drawTrajectory(launchVelocity, launchAngleRad, launchHeight, timeOfFlight, horizontalDistance, maxHeight, distanceAtMaxHeight) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const padding = 40;
     const points = [];
-    for (let t = 0; t <= timeOfFlight; t += 0.01) {
+    const tDelta = timeOfFlight / 100; // Number of points to plot
+    for (let t = 0; t <= timeOfFlight; t += tDelta) {
         const x = launchVelocity * Math.cos(launchAngleRad) * t;
         const y = launchHeight + launchVelocity * Math.sin(launchAngleRad) * t - 0.5 * g * t * t;
         points.push({ x, y });
     }
 
-    const xScale = (canvas.width - 2 * padding) / horizontalDistance;
-    const yScale = (canvas.height - 2 * padding) / maxHeight;
+    const labels = points.map(point => point.x); // X-axis labels (distance)
+    const data = points.map(point => point.y); // Y-axis data (height)
 
-    ctx.beginPath();
-    ctx.moveTo(padding, canvas.height - padding - launchHeight * yScale);
+    // Destroy the existing chart if it exists
+    if (window.trajectoryChart) {
+        window.trajectoryChart.destroy();
+    }
 
-    points.forEach(point => {
-        ctx.lineTo(padding + point.x * xScale, canvas.height - padding - point.y * yScale);
+    // Create a new Chart.js chart
+    const ctx = document.getElementById('trajectoryCanvas').getContext('2d');
+    window.trajectoryChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Projectile Trajectory',
+                    data: data,
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'linear', // Use a linear scale for numeric X-axis
+                    title: {
+                        display: true,
+                        text: 'Distance (m)',
+                    },
+                    ticks: {
+                        callback: function (value) {
+                            return value.toFixed(2); // Format tick labels as numeric values
+                        },
+                    },
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Height (m)',
+                    },
+                },
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const x = labels[context.dataIndex];
+                            const y = data[context.dataIndex];
+                            return `(${x.toFixed(2)}, ${y.toFixed(2)})`;
+                        },
+                    },
+                },
+                annotation: {
+                    annotations: {
+                        distanceAtMaxHeight: {
+                            type: 'line',
+                            xMin: distanceAtMaxHeight,
+                            xMax: distanceAtMaxHeight,
+                            borderColor: 'red',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            label: {
+                                content: `Distance at Max Height: ${distanceAtMaxHeight.toFixed(2)} m`,
+                                display: true,
+                                position: 'start',
+                                color: 'red',
+                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            },
+                        },
+                        horizontalDistance: {
+                            type: 'line',
+                            xMin: horizontalDistance,
+                            xMax: horizontalDistance,
+                            borderColor: 'blue',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            label: {
+                                content: `Horizontal Distance: ${horizontalDistance.toFixed(2)} m`,
+                                display: true,
+                                position: 'end',
+                            },
+                        },
+                        maxHeight: {
+                            type: 'line',
+                            yMin: maxHeight,
+                            yMax: maxHeight,
+                            borderColor: 'green',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            label: {
+                                content: `Max Height: ${maxHeight.toFixed(2)} m`,
+                                display: true,
+                                position: 'start',
+                            },
+                        },
+                    },
+                },
+            },
+        },
     });
-
-    ctx.stroke();
-
-    // Draw markers and drop lines
-    ctx.fillStyle = 'red';
-    ctx.fillRect(padding + distanceAtMaxHeight * xScale - 3, canvas.height - padding - maxHeight * yScale - 3, 6, 6); // Max height marker
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(padding + horizontalDistance * xScale - 3, canvas.height - padding - 3, 6, 6); // Range marker
-
-    ctx.strokeStyle = 'red';
-    ctx.setLineDash([5, 5]);
-    ctx.beginPath();
-    ctx.moveTo(padding + distanceAtMaxHeight * xScale, canvas.height - padding - maxHeight * yScale);
-    ctx.lineTo(padding + distanceAtMaxHeight * xScale, canvas.height - padding);
-    ctx.stroke();
-
-    ctx.setLineDash([]);
-    ctx.strokeStyle = 'blue';
-    ctx.beginPath();
-    ctx.moveTo(padding, canvas.height - padding - maxHeight * yScale);
-    ctx.lineTo(padding + horizontalDistance * xScale, canvas.height - padding - maxHeight * yScale);
-    ctx.stroke();
-
-    // Draw axis labels
-    ctx.fillStyle = 'black';
-    ctx.font = '12px Arial';
-    ctx.fillText('Distance (m)', canvas.width / 2 - 30, canvas.height - 5);
-    ctx.save();
-    ctx.translate(15, canvas.height / 2 + 30);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText('Height (m)', 0, 0);
-    ctx.restore();
-
-    // Draw labels for max height and distance at max height
-    ctx.fillText(`Max Height: ${maxHeight.toFixed(2)} m`, padding + distanceAtMaxHeight * xScale + 5, canvas.height - padding - maxHeight * yScale - 10);
-    ctx.fillText(`Distance: ${distanceAtMaxHeight.toFixed(2)} m`, padding + distanceAtMaxHeight * xScale + 5, canvas.height - padding - 15);
-
-    // Draw ticks, tick labels, and grid lines
-    const xTickSpacing = 0.25;
-    const yTickSpacing = 0.1;
-
-    ctx.strokeStyle = 'lightgray';
-    ctx.setLineDash([2, 2]);
-
-    for (let i = 0; i <= horizontalDistance / xTickSpacing; i++) {
-        const x = padding + i * xTickSpacing * xScale;
-        ctx.beginPath();
-        ctx.moveTo(x, canvas.height - padding);
-        ctx.lineTo(x, padding);
-        ctx.stroke();
-        if (i % 2 === 0) {
-            ctx.fillText((i * xTickSpacing).toFixed(2), x - 10, canvas.height - padding + 15);
-        }
-    }
-
-    for (let i = 0; i <= maxHeight / yTickSpacing; i++) {
-        const y = canvas.height - padding - i * yTickSpacing * yScale;
-        ctx.beginPath();
-        ctx.moveTo(padding, y);
-        ctx.lineTo(canvas.width - padding, y);
-        ctx.stroke();
-        if (i % 2 === 0) {
-            ctx.fillText((i * yTickSpacing).toFixed(2), padding - 30, y + 3);
-        }
-    }
-
-    ctx.setLineDash([]);
 }
 
 function calibrateVelocity() {
