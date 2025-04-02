@@ -20,6 +20,7 @@
                     <li class="tab-item active" onclick="showTab('predictTab')">Predict</li>
                     <li class="tab-item" onclick="showTab('calibrateVelocityTab')">Calibrate Velocity</li>
                     <li class="tab-item" onclick="showTab('calibrateAngleTab')">Calibrate Angle</li>
+                    <li class="tab-item" onclick="showTab('predictMultipleTab')">Predict Multiple</li>
                 </ul>
             </div>
 
@@ -55,6 +56,15 @@
                 <input type="number" id="targetHeightAngle" name="targetHeightAngle" step="0.01">
                 <button onclick="calibrateAngle()">Calculate</button>
                 <div id="calibrateAngleResults" class="results-box"></div>
+            </div>
+
+            <div id="predictMultipleTab" class="tab-content">
+                <h2>Predict Multiple Trajectories</h2>
+                <label for="launchVelocities">Launch Velocities (comma-separated, m/s):</label>
+                <input type="text" id="launchVelocities" name="launchVelocities" placeholder="e.g., 10, 20, 30">
+                <label for="launchAngles">Launch Angles (comma-separated, degrees):</label>
+                <input type="text" id="launchAngles" name="launchAngles" placeholder="e.g., 30, 45, 60">
+                <button onclick="predictMultiple()">Calculate</button>
             </div>
         </div>
         <div class="right-panel">

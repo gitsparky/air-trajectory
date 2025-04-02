@@ -84,14 +84,19 @@ function drawTrajectory(launchVelocity, launchAngleRad, launchHeight, timeOfFlig
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    type: 'linear', // Use a linear scale for numeric X-axis
+                    type: 'linear',
                     title: {
                         display: true,
                         text: 'Distance (m)',
                     },
+                    grid: {
+                        drawTicks: true,
+                        color: (context) => (context.tick.value % 0.5 === 0 ? '#ccc' : '#eee'), // Major ticks darker
+                    },
                     ticks: {
+                        stepSize: 0.1, // Minor ticks
                         callback: function (value) {
-                            return value.toFixed(2); // Format tick labels as numeric values
+                            return value % 0.5 === 0 ? value.toFixed(1) : ''; // Show labels only for major ticks
                         },
                     },
                 },
@@ -99,6 +104,16 @@ function drawTrajectory(launchVelocity, launchAngleRad, launchHeight, timeOfFlig
                     title: {
                         display: true,
                         text: 'Height (m)',
+                    },
+                    grid: {
+                        drawTicks: true,
+                        color: (context) => (context.tick.value % 0.5 === 0 ? '#ccc' : '#eee'), // Major ticks darker
+                    },
+                    ticks: {
+                        stepSize: 0.1, // Minor ticks
+                        callback: function (value) {
+                            return value % 0.5 === 0 ? value.toFixed(1) : ''; // Show labels only for major ticks
+                        },
                     },
                 },
             },
@@ -201,4 +216,101 @@ function calibrateAngle() {
     `;
 
     drawTrajectory(launchVelocity, angleRad, launchHeight, (2 * launchVelocity * Math.sin(angleRad)) / g, targetDistance, maxHeight, distanceAtMaxHeight);
+}
+
+function predictMultiple() {
+    const velocities = document.getElementById('launchVelocities').value.split(',').map(v => parseFloat(v.trim()));
+    const angles = document.getElementById('launchAngles').value.split(',').map(a => parseFloat(a.trim()));
+    const launchHeight = parseFloat(document.getElementById('launchHeight').value);
+
+    if (velocities.some(isNaN) || angles.some(isNaN) || isNaN(launchHeight)) {
+        alert('Please enter valid inputs for velocities, angles, and launch height.');
+        return;
+    }
+
+    const colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'cyan', 'magenta'];
+    const datasets = [];
+
+    velocities.forEach((velocity, vIndex) => {
+        angles.forEach((angle, aIndex) => {
+            const angleRad = angle * (Math.PI / 180);
+            const timeOfFlight = (velocity * Math.sin(angleRad) + Math.sqrt(Math.pow(velocity * Math.sin(angleRad), 2) + 2 * g * launchHeight)) / g;
+            const points = [];
+            const tDelta = timeOfFlight / 100;
+
+            for (let t = 0; t <= timeOfFlight; t += tDelta) {
+                const x = velocity * Math.cos(angleRad) * t;
+                const y = launchHeight + velocity * Math.sin(angleRad) * t - 0.5 * g * t * t;
+                points.push({ x, y });
+            }
+
+            datasets.push({
+                label: `v=${velocity} m/s, θ=${angle}°`,
+                data: points.map(p => ({ x: p.x, y: p.y })),
+                borderColor: colors[(vIndex * angles.length + aIndex) % colors.length],
+                borderWidth: 2,
+                fill: false,
+                pointRadius: 0,
+            });
+        });
+    });
+
+    // Destroy the existing chart if it exists
+    if (window.trajectoryChart) {
+        window.trajectoryChart.destroy();
+    }
+
+    // Create a new Chart.js chart
+    const ctx = document.getElementById('trajectoryCanvas').getContext('2d');
+    window.trajectoryChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: datasets,
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'linear',
+                    title: {
+                        display: true,
+                        text: 'Distance (m)',
+                    },
+                    grid: {
+                        drawTicks: true,
+                        color: (context) => (context.tick.value % 0.5 === 0 ? '#ccc' : '#eee'), // Major ticks darker
+                    },
+                    ticks: {
+                        stepSize: 0.1, // Minor ticks
+                        callback: function (value) {
+                            return value % 0.5 === 0 ? value.toFixed(1) : ''; // Show labels only for major ticks
+                        },
+                    },
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Height (m)',
+                    },
+                    grid: {
+                        drawTicks: true,
+                        color: (context) => (context.tick.value % 0.5 === 0 ? '#ccc' : '#eee'), // Major ticks darker
+                    },
+                    ticks: {
+                        stepSize: 0.1, // Minor ticks
+                        callback: function (value) {
+                            return value % 0.5 === 0 ? value.toFixed(1) : ''; // Show labels only for major ticks
+                        },
+                    },
+                },
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                },
+            },
+        },
+    });
 }
